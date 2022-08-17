@@ -22,8 +22,17 @@ export function App() {
       // could implement proxy in package.json
       try {
         const { data } = await axios.get('http://localhost:4000/repos/');
-        setOriginalRepose(data);
-        setFilteredRepos(data);
+        const sortedRepos = data
+          .sort((a: any, b: any) => {
+            return (
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
+            );
+          })
+          .reverse();
+
+        setOriginalRepose(sortedRepos);
+        setFilteredRepos(sortedRepos);
       } catch (error: any) {
         console.log('Sabotaged by terrible middleware?');
         console.log(error);

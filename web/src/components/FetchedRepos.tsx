@@ -2,6 +2,7 @@ import React from 'react';
 import './FetchedRepos.css';
 
 export default function FetchedRepos({ reposData, loading }: any) {
+  // map filtered list of repos
   const mappedRepos = reposData.map((repo: any) => {
     return (
       <div className="repo" key={repo.id}>
@@ -20,6 +21,7 @@ export default function FetchedRepos({ reposData, loading }: any) {
         <p>
           <strong>Number of Forks:</strong> {repo.forks}
         </p>
+        <p>Created At: {repo.created_at}</p>
       </div>
     );
   });
