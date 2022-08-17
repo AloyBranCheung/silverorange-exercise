@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './FetchedRepos.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function FetchedRepos({ reposData, loading }: any) {
-  const [repoID, setRepoId] = useState(0);
+  const navigate = useNavigate();
 
   const clickHandler = (id: any) => {
-    setRepoId(id);
+    const selectedRepo = reposData.filter((repo: any) => {
+      return repo.id === id;
+    });
+    navigate(`/${id}`, { state: selectedRepo });
   };
 
   // map filtered list of repos
@@ -33,19 +37,6 @@ export default function FetchedRepos({ reposData, loading }: any) {
         <p>
           <strong>Number of Forks:</strong> {repo.forks}
         </p>
-        {repoID === repo.id && (
-          <>
-            <p>
-              <strong>Recent Commit Date: </strong>
-            </p>
-            <p>
-              <strong>Author: </strong>
-            </p>
-            <p>
-              <strong>Message: </strong>
-            </p>
-          </>
-        )}
       </div>
     );
   });
