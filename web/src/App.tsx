@@ -3,17 +3,24 @@ import './App.css';
 import axios from 'axios';
 // Components
 import FetchedRepos from './components/FetchedRepos';
+import LanguagesButtons from './components/LanguagesButtons';
 
+// Note: I did not use typescript and just bypassed typing with 'any',
 // I usually use CSS modules/styled-components to component-scope styling
 
 export function App() {
+  // Loading/Error Handling
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMesssage, setErrorMessage] = useState('');
+
   // ALL repos from fetch
-  const [originalRepos, setOriginalRepose] = useState([]);
+  const [originalRepos, setOriginalRepose] = useState<any>([]);
   // filtered list of repos
   const [filteredRepos, setFilteredRepos] = useState([]);
+
+  // list of language types
+  const [listOfLanguages, setListofLanguages] = useState([]);
 
   // fetch repos to react app
   useEffect(() => {
@@ -22,6 +29,8 @@ export function App() {
       // could implement proxy in package.json
       try {
         const { data } = await axios.get('http://localhost:4000/repos/');
+
+        // sort reverse chronlogical order
         const sortedRepos = data
           .sort((a: any, b: any) => {
             return (
@@ -31,6 +40,16 @@ export function App() {
           })
           .reverse();
 
+        // get a list of languages
+        const languages: any = [];
+
+        for (const repo of data) {
+          if (!languages.includes(repo.language)) {
+            languages.push(repo.language);
+          }
+        }
+
+        setListofLanguages(languages);
         setOriginalRepose(sortedRepos);
         setFilteredRepos(sortedRepos);
       } catch (error: any) {
@@ -44,6 +63,7 @@ export function App() {
     setIsLoading(false);
   }, []);
 
+  // if terrible middleware happens then will return a failed response and prompt to refresh page
   if (isError) {
     return (
       <div className="error">
@@ -59,6 +79,15 @@ export function App() {
     );
   }
 
+  // filter language chosen
+  const languageChosen = (language: any) => {
+    const newArr = originalRepos.filter((repo: any) => {
+      return repo.language === language;
+    });
+
+    setFilteredRepos(newArr);
+  };
+
   return (
     <div className="App">
       <div className="title">
@@ -68,6 +97,10 @@ export function App() {
         <h1 style={{ display: 'flex', height: '100vh' }}>Loading...</h1>
       ) : (
         <div>
+          <LanguagesButtons
+            languageChosen={languageChosen}
+            languages={listOfLanguages}
+          />
           <FetchedRepos loading={isLoading} reposData={filteredRepos} />
         </div>
       )}
