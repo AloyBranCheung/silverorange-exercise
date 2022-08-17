@@ -9,7 +9,7 @@ export default function RepoDetails() {
   const [readMe, setReadMe] = useState('');
   const [isReadMeError, setIsReadMeError] = useState(false);
   const [readMeError, setReadMeError] = useState('');
-  const [recentCommits, setRecentCommits] = useState<any>({});
+  const [recentCommits, setRecentCommits] = useState<any>(null);
 
   // can render Readme with octokit https://docs.github.com/en/rest/markdown#render-a-markdown-document
 
@@ -41,6 +41,7 @@ export default function RepoDetails() {
           `https://api.github.com/repos/silverorange/${location.state[0].name}/commits/${commitSha}`
         );
         // received data
+        console.log(commits);
         setRecentCommits(commits.data.commit);
       } catch (error) {
         console.log(error);
@@ -64,9 +65,9 @@ export default function RepoDetails() {
         <>
           <button onClick={clickBack}>Back</button>
           <h1>Repo Details: {location.state[0].name}</h1>
-          <p>Recent Commit Date: {recentCommits.author.date}</p>
-          <p>Author: {recentCommits.author.name} </p>
-          <p>Message: {recentCommits.message} </p>
+          <p>Recent Commit Date: {recentCommits?.author.date}</p>
+          <p>Author: {recentCommits?.author.name} </p>
+          <p>Message: {recentCommits?.message} </p>
           <div>
             <h1>ReadMe:</h1>
             {isReadMeError ? (
