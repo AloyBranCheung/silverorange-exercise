@@ -9,6 +9,7 @@ repos.get('/', async (_: Request, res: Response) => {
   // repository.fork = false repos to send to client
   const filteredRepos: any = [];
 
+  // Task #2, #3
   // Source 1: Axios GET for https://api.github.com/users/silverorange/repos
   try {
     const response = await axios.get(
@@ -21,12 +22,13 @@ repos.get('/', async (_: Request, res: Response) => {
       }
     }
   } catch (error) {
-    // or next() to an error handling middleware?
+    // or next() to an error handling middleware? or I could throw an error?
     console.error(error);
   }
 
-  // Source 2: File system api/data/repos.json,
-  // admin changes file and a request happens after by a consumer?
+  // Source 2: File system api/data/repos.json, since it can be changed while
+  // service is running
+  // admin changes file and a request happens after by a consumer? duplicates?
   const data = fs.readFileSync(
     path.resolve(__dirname, '../../data/repos.json')
   );
@@ -39,8 +41,10 @@ repos.get('/', async (_: Request, res: Response) => {
 
   // response
   res.header('Cache-Control', 'no-store');
+  // Task #4
   res.header('Content-Type', 'application/json');
   res.status(200);
-  // TODO: See README.md Task (A). Return repo data here. You’ve got this!
+  // TODO: See README.md Task (A). Return repo data here. You’ve got this! Eeek!
+  // Task #4
   res.json(filteredRepos);
 });
