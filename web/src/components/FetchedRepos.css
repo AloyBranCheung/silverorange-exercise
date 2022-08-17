@@ -1,0 +1,12 @@
+.repoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.repo {
+  background-color: var(--secondary-color);
+  padding: 5%;
+  border-radius: 10px;
+  box-shadow: 10px 8px 8px black;
+}
