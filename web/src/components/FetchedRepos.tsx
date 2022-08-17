@@ -37,6 +37,9 @@ export default function FetchedRepos({ reposData, loading }: any) {
         <p>
           <strong>Number of Forks:</strong> {repo.forks}
         </p>
+        <p>
+          <strong>Created At: </strong> {repo.created_at}
+        </p>
       </div>
     );
   });
