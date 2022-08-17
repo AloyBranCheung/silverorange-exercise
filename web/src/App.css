@@ -7,7 +7,7 @@
 .App {
   display: flex;
   flex-direction: column;
-  gap: 100px;
+  gap: 75px;
   background-color: var(--main-color);
   padding: 3%;
 }
