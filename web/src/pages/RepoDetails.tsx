@@ -9,6 +9,9 @@ export default function RepoDetails() {
   const [readMe, setReadMe] = useState('');
   const [isReadMeError, setIsReadMeError] = useState(false);
   const [readMeError, setReadMeError] = useState('');
+  const [recentCommits, setRecentCommits] = useState<any>({});
+
+  // can render Readme with octokit https://docs.github.com/en/rest/markdown#render-a-markdown-document
 
   useEffect(() => {
     // fetch
@@ -25,9 +28,30 @@ export default function RepoDetails() {
         setReadMeError(error.message);
       }
     };
+
+    const fetchCommits = async () => {
+      let commitSha = '';
+      try {
+        const response = await axios.get(
+          `https://api.github.com/repos/silverorange/${location.state[0].name}/branches`
+        );
+        commitSha = response.data[0].commit.sha;
+
+        const commits = await axios.get(
+          `https://api.github.com/repos/silverorange/${location.state[0].name}/commits/${commitSha}`
+        );
+        // received data
+        setRecentCommits(commits.data.commit);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchReadMe();
+    fetchCommits();
     setIsLoading(false);
   }, [location.state]);
+
+  console.log(recentCommits);
 
   const clickBack = () => {
     navigate(-1);
@@ -40,9 +64,9 @@ export default function RepoDetails() {
         <>
           <button onClick={clickBack}>Back</button>
           <h1>Repo Details: {location.state[0].name}</h1>
-          <p>Recent Commit Date: </p>
-          <p>Author: </p>
-          <p>Message: </p>
+          <p>Recent Commit Date: {recentCommits.author.date}</p>
+          <p>Author: {recentCommits.author.name} </p>
+          <p>Message: {recentCommits.message} </p>
           <div>
             <h1>ReadMe:</h1>
             {isReadMeError ? (
